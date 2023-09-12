@@ -15,8 +15,8 @@
 - name: Upload kickstart ISO to vSphere
   vsphere_copy:
     hostname: '{{vsphere_host}}'
-    username: '{{vsphere_user}}'
-    password: '{{vsphere_password}}'
+    username: '{{ovh_pcc_admin_user}}'
+    password: '{{ovh_pcc_admin_password}}'
     datacenter: '{{vsphere_datacenter}}'
     validate_certs: false
     datastore: '{{vsphere_datastore}}'
@@ -27,8 +27,8 @@
 - name: Create Virtual Machine
   vmware_guest:
     hostname: '{{vsphere_host}}'
-    username: '{{vsphere_user}}'
-    password: '{{vsphere_password}}'
+    username: '{{ovh_pcc_admin_user}}'
+    password: '{{ovh_pcc_admin_password}}'
     datacenter: '{{vsphere_datacenter}}'
     validate_certs: false
     folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
@@ -66,8 +66,8 @@
 - name: Shutdown Virtual Machine
   vmware_guest:
     hostname: '{{vsphere_host}}'
-    username: '{{vsphere_user}}'
-    password: '{{vsphere_password}}'
+    username: '{{ovh_pcc_admin_user}}'
+    password: '{{ovh_pcc_admin_password}}'
     datacenter: '{{vsphere_datacenter}}'
     validate_certs: false
     folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
@@ -83,8 +83,8 @@
 - name: Unattach the ISO mounts from the Virtual Machine
   vmware_guest:
     hostname: '{{vsphere_host}}'
-    username: '{{vsphere_user}}'
-    password: '{{vsphere_password}}'
+    username: '{{ovh_pcc_admin_user}}'
+    password: '{{ovh_pcc_admin_password}}'
     datacenter: '{{vsphere_datacenter}}'
     validate_certs: no
     folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
@@ -103,8 +103,8 @@
 - name: Power on Virtual Machine
   vmware_guest:
     hostname: '{{vsphere_host}}'
-    username: '{{vsphere_user}}'
-    password: '{{vsphere_password}}'
+    username: '{{ovh_pcc_admin_user}}'
+    password: '{{ovh_pcc_admin_password}}'
     datacenter: '{{vsphere_datacenter}}'
     validate_certs: false
     folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
