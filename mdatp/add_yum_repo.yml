@@ -26,17 +26,23 @@
     baseurl: https://packages.microsoft.com/[distro]/[version]/[channel]/ 
     gpgcheck: yes
     enabled: Yes
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['distribution'] == "CentOS" # CentOS 8,7,6
+when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "8") # CentOS 8 only
+
+
+
 
 - name: Add Fedora 38 Microsoft yum repository for MDATP
   yum_repository:
     name: packages-microsoft-prod
     description: Microsoft Defender for Endpoint
     file: microsoft-prod
-    baseurl: https://packages.microsoft.com/fedora/38/prod/
+    baseurl: "https://packages.microsoft.com/fedora/{{ansible_facts['distribution_major_version']}}/prod/"
     gpgcheck: yes
     enabled: Yes
-  when: ansible_os_family == "Fedora"
+  when: ansible_facts['distribution'] == "Fedora" 
+#  when: (ansible_facts['distribution'] == "Fedora" and ansible_facts['distribution_major_version'] == "38") # Fedora 38
+
 
 - name: Add Ubuntu 22.04   Microsoft yum repository for MDATP
   yum_repository:
