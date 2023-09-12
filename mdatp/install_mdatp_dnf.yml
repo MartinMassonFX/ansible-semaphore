@@ -1,8 +1,9 @@
 - hosts: fxhtyul2pnet001.fxhosting.net
+  become: true
   tasks:
     - name: Display all variables/facts known for a host
       ansible.builtin.debug:
-        msg: System {{ inventory_hostname }} is {{ ansible_os_family }}
+        msg: System {{ inventory_hostname }} is {{ ansible_os_family }} - 
     - include: ../mdatp/onboarding_setup.yml
     - include: ../mdatp/add_yum_repo.yml
 #    - name: Install MDATP
