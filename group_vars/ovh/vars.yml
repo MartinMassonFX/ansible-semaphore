@@ -8,6 +8,6 @@ ovh_pcc_admin_password: "{{ vault_ovh_pcc_admin_password }}"
 
 # VSPHERE DEFAULTS
 vsphere_host: pcc-149-56-104-131.ovh.ca
-vsphere_datacenter: pcc-149-56-104-131_datacenter2504
+vsphere_datacenter: pcc-149-56-104-131_datacenter3102
 vsphere_datastore: ssd-005754
 vsphere_deploy_folder: Automation
