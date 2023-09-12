@@ -1,0 +1,63 @@
+---
+# file: group_vars/all.yml
+#
+# This file contains all the common variables
+
+# GENERAL
+ansible_python_interpreter: auto
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+ad_domain: fxhosting.net
+
+# NETWORK DEFAULTS
+vm_domain: fxhosting.net
+vm_gw: 10.100.12.1
+vm_netmask: 255.255.255.0
+vm_nameserver: 10.100.12.10
+
+vm_dns: 
+  - 10.100.12.10
+  - 10.100.12.11
+  - 10.200.251.10
+  - 10.200.251.11
+
+ntp_servers:
+  - 10.200.254.35
+  - 10.200.254.36
+
+
+# VSPHERE DEFAULTS
+vsphere_host: pcc-149-56-104-131.ovh.ca
+vsphere_datacenter: pcc-149-56-104-131_datacenter2504
+vsphere_datastore: pcc-001909
+vsphere_deploy_folder: Automation
+
+# PLEASE REMOVE
+#vsphere_user: xxxx - ASK IN THE PLAYBOOK
+#vsphere_password: xxxx - ASK IN THE PLAYBOOK
+
+# VM DEPLOYMENT DEFAULTS
+vm_fedora36_installer_iso_path: /ISO/Fedora-Everything-netinst-x86_64-36-1.5.iso
+vm_centos8_installer_iso_path: /ISO/CentOS-8.4.2105-x86_64-dvd1.iso
+#vm_installer_iso_path: "{{vm_centos8_installer_iso_path}}"
+vm_installer_iso_path: "{{vm_fedora36_installer_iso_path}}"
+vm_kickstart_iso_path: /OS/kickstart
+vm_kickstart_template: kickstart.cfg.j2
+vm_guestid: centos8_64Guest
+#vm_guestid: fedora64Guest
+#vm_network: VLAN12-FXHT_Management
+vm_network: VLAN13-FX_Services_Internet_DMZ
+vm_cpu: 2
+vm_mem: 2048
+vm_disk_size: 16
+
+#vm_template: centos8-template.fxhosting.net
+vm_template: fedora36-template.fxhosting.net
+
+#vm_rootpwd:  xxxx - ASK IN THE PLAYBOOK
+
+vm_disks: 
+  - autoselect_datastore: true
+    type: thin
+    size_gb: 16
+

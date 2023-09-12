@@ -1,0 +1,29 @@
+---
+# observium.yml
+
+
+app_database: observium
+app_username: observium
+app_password: "{{ vault_app_password }}"
+
+observium_admin_password: "{{ vault_observium_admin_password }}"
+
+path_to_app: /opt/observium
+
+# Lean Delivery Mysql Module:
+mysql_root_password: "{{ vault_mysql_root_password }}"
+mysql_databases:
+  - name: "{{ app_database }}"
+    encoding: utf8
+    collation: utf8_general_ci
+mysql_users:
+  - name: "{{ app_username }}"
+    host: "localhost"
+    password: "{{ app_password }}"
+    priv: "{{ app_database }}.*:ALL"
+mysql_port: 3306
+mysql_bind_address: '0.0.0.0'
+mysql_daemon: mariadb
+mysql_log: ""
+mysql_slow_query_log_enabled: true
+mysql_slow_query_time: 2

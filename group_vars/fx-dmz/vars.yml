@@ -1,0 +1,17 @@
+---
+# file: group_vars/all.yml
+#
+# This file contains all the common variables
+
+# NETWORK DEFAULTS
+vm_domain: fx.net
+vm_gw: 10.100.249.254
+vm_nameserver: 10.100.12.10
+
+vm_dns: 
+  - 10.100.12.10
+
+vm_network: VLAN13-FX_Services_Internet_DMZ
+
+ad_domain: fxhosting.net
+
