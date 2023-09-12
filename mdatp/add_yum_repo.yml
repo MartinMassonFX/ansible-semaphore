@@ -27,7 +27,7 @@
     gpgcheck: yes
     enabled: Yes
   when: ansible_facts['distribution'] == "CentOS" # CentOS 8,7,6
-when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "8") # CentOS 8 only
+#  when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "8") # CentOS 8 only
 
 
 
