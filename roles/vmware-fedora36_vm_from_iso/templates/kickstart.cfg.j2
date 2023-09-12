@@ -1,0 +1,48 @@
+url --mirrorlist="https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-36&arch=x86_64"
+keyboard 'us'
+lang en_US.UTF-8
+timezone America/Toronto --utc
+
+rootpw "{{vm_rootpwd}}"
+
+network --bootproto=static --ip={{vm_ip}} --netmask={{vm_netmask}} --gateway={{vm_gw}} --nameserver={{vm_nameserver}} --noipv6
+network --hostname={{ inventory_hostname }}
+
+text
+skipx
+
+firstboot --disabled
+
+bootloader --location=mbr
+clearpart --all --initlabel
+#autopart --type=lvm
+part /boot --fstype=xfs   --ondisk=sda  --size=1024
+part pv.1  --fstype=lvmpv --ondisk=sda  --size=1 --grow
+volgroup fedora --pesize=4096 pv.1
+logvol swap --name=swap --vgname=fedora --size=2000 --fstype=swap
+logvol /    --name=root --vgname=fedora --size=12000 --fstype=xfs
+
+
+group --name=ansible --gid=5000
+user --name=ansible --uid=5000 --gid=5000
+#sshkey --username=ansible "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDC8hJv3uRRQHXsJHipmB78RImwybfK5U9u2M5HVlbQh9tGgDBxLuPDoyF4hMNxLfkhJUy4hQwqvB2oqDf/85sUP9v22eJKyjHsP9fDCojP5gRqbaZ+TtgjuE4DNldVifoOyCnx5RqwQ8Rhj2iTfW8HsMLOOKM8vaCmdaPOMRP8QoL5qufsbK23apvqHC70j1XXuVfy22hyMG11Cc3+byYvZAL23b4AxLDXj7MgkDJYcYdF6LKL4g6POVhEbyDsUnYLsj8wbkyjB2rgf5NibUa4q07dJNL3tjf4RGaHUA25S5YR+2qdwn4gNZxTOMiaObDRKd1mzY/lKQZ8RRn8GlsKGaX3Q1APg2ZpijQ4MSoESsk/ZjOx9I2ZOO+4NKZirdDeS3T0x1Nzg6XbnnmPV1i/BcxoJhNe6ZxqVywI1RW5ZkwJz7HGP/OapDi5Q2HNJH+Dzk5K9c2Cx57Ko7kuu+f1jb+aTyhHfeoLxj+B+4yWlpLBKHl2YeXUwLq24sN1NLs= ansible@redhat-ansible.ad.sogica.ca"
+sshkey --username=ansible "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAyguK86p0XrwGpUAZX6EJAzyEN1Y8jumG107XbumCBtFvoUyCJ0C9rBxmrCDqm87Q+Y6h5RUcX94Sgoeh1fKJHTd54v+KdgQ5CfYW+UjExO2Nwf/88MAuujb/vNsEed2PKd1ZHG8bJdgkSRxOHMTXnMdwftZ/VYCLCkD6pWQJ4EgJG5A4AO559XVrzJjrpNx3QwZ9S/Q3+VJ68hkKz25BEW2XkR9tkRD9CeopYqjCPirXgle3YpeIwFkAG/49EeruSpIU8xdJN8KjBj6SF3Q2o22KP8H7gB15SrCSsgHqbl4Rzcvcn5hsNgPMbdZ9KpH+vlnE6dUTSrumWnKBZG71 mmasson@Martins-MacBook-Pro.local"
+
+
+%packages
+@core
+@^minimal-environment
+perl
+wget
+python3-pexpect
+open-vm-tools
+%end
+
+firewall --enabled --ssh
+reboot
+
+%post
+echo "ansible ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ansible
+echo "%domain\ admins ALL=(ALL) ALL" >> /etc/sudoers.d/ansible
+
+%end

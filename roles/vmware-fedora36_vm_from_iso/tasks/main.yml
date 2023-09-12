@@ -1,0 +1,113 @@
+---
+# file: roles/deploy_vm_from_iso/main.yml
+#
+
+- name: Generate kickstart file
+  template:
+    src: kickstart.cfg.j2
+    dest: '{{role_path}}/files/kickstart.cfg'
+  delegate_to: localhost
+
+- name: Build kickstart iso
+  command: python3 '{{role_path}}/files/kickstart-iso.py' '{{role_path}}/files/kickstart.cfg' '{{role_path}}/files/kickstart-{{inventory_hostname}}.iso'
+  delegate_to: localhost
+
+- name: Upload kickstart ISO to vSphere
+  vsphere_copy:
+    hostname: '{{vsphere_host}}'
+    username: '{{vsphere_user}}'
+    password: '{{vsphere_password}}'
+    datacenter: '{{vsphere_datacenter}}'
+    validate_certs: false
+    datastore: '{{vsphere_datastore}}'
+    src: '{{role_path}}/files/kickstart-{{inventory_hostname}}.iso'
+    path: '{{vm_kickstart_iso_path}}-{{inventory_hostname}}.iso'
+  delegate_to: localhost
+
+- name: Create Virtual Machine
+  vmware_guest:
+    hostname: '{{vsphere_host}}'
+    username: '{{vsphere_user}}'
+    password: '{{vsphere_password}}'
+    datacenter: '{{vsphere_datacenter}}'
+    validate_certs: false
+    folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
+    name: '{{inventory_hostname}}'
+    state: poweredon
+    guest_id: '{{vm_guestid}}'
+    annotation: "VM Provisionned by Ansible"
+    hardware:
+      memory_mb: '{{ vm_mem }}'
+      num_cpus: '{{ vm_cpu }}'
+    disk:
+    - autoselect_datastore: true
+      type: thin
+      size_gb: '{{vm_disk_size}}'
+    networks:
+    - name: '{{vm_network}}'
+      type: static
+      ip: '{{vm_ip}}'
+      domain: '{{vm_domain}}'
+      gateway: '{{vm_gw}}'
+      netmask: '{{vm_netmask}}'
+      dns_servers: '{{ntp_servers}}'
+    cdrom:
+    - type: iso
+      iso_path: '[{{vsphere_datastore}}] {{vm_installer_iso_path}}'
+      controller_number: 0
+      unit_number: 0
+    - type: iso
+      iso_path: '[{{vsphere_datastore}}] {{ vm_kickstart_iso_path }}-{{inventory_hostname}}.iso'
+      controller_number: 0
+      unit_number: 1
+    wait_for_ip_address: yes
+  delegate_to: localhost
+
+- name: Shutdown Virtual Machine
+  vmware_guest:
+    hostname: '{{vsphere_host}}'
+    username: '{{vsphere_user}}'
+    password: '{{vsphere_password}}'
+    datacenter: '{{vsphere_datacenter}}'
+    validate_certs: false
+    folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
+    name: '{{inventory_hostname}}'
+    state: shutdownguest
+  delegate_to: localhost
+
+- name: Wait for Virtual Machine to shutdown
+  wait_for:
+          timeout: 15
+  delegate_to: localhost
+
+- name: Unattach the ISO mounts from the Virtual Machine
+  vmware_guest:
+    hostname: '{{vsphere_host}}'
+    username: '{{vsphere_user}}'
+    password: '{{vsphere_password}}'
+    datacenter: '{{vsphere_datacenter}}'
+    validate_certs: no
+    folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
+    name: '{{inventory_hostname}}'
+    cdrom:
+    - type: none
+      controller_number: 0
+      unit_number: 0
+    - type: none
+      state: absent
+      controller_number: 0
+      unit_number: 1
+    force: yes
+  delegate_to: localhost
+
+- name: Power on Virtual Machine
+  vmware_guest:
+    hostname: '{{vsphere_host}}'
+    username: '{{vsphere_user}}'
+    password: '{{vsphere_password}}'
+    datacenter: '{{vsphere_datacenter}}'
+    validate_certs: false
+    folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
+    name: '{{inventory_hostname}}'
+    state: poweredon
+  delegate_to: localhost

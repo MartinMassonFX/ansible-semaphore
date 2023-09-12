@@ -1,0 +1,24 @@
+---
+# file: deploy_template_from_is.yml
+
+## FEDORA VMs CANNOT BE CUSTOMIZED BY VCENTER
+## THUS WE NEED TO CONFIGURE THEM IN PLACE
+
+- hosts: fxhtyul2pdkr003.fxhosting.net
+  vars_prompt:
+    - name: vsphere_user
+      prompt: What is your OVH Private Cloud username?
+      private: no
+
+    - name: vsphere_password
+      prompt: What is your OVH Private Cloud password?
+
+    - name: vm_rootpwd
+      prompt: What root password you wish to assign to the Template?
+
+  gather_facts: no
+  become: no
+  roles:
+          - vmware-fedora36_vm_from_iso
+
+
