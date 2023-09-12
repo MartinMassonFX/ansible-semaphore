@@ -1,0 +1,13 @@
+---
+# ovh.yml
+
+
+# PCC users
+ovh_pcc_admin_user: admin
+ovh_pcc_admin_password: "{{ vault_ovh_pcc_admin_password }}"
+
+# VSPHERE DEFAULTS
+vsphere_host: pcc-149-56-104-131.ovh.ca
+vsphere_datacenter: pcc-149-56-104-131_datacenter2504
+vsphere_datastore: pcc-001909
+vsphere_deploy_folder: Automation
