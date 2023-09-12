@@ -31,6 +31,7 @@
     password: '{{ovh_pcc_admin_password}}'
     datacenter: '{{vsphere_datacenter}}'
     validate_certs: false
+    datastore: '{{vsphere_datastore}}'
     folder: '/{{vsphere_datacenter}}/vm/{{vsphere_deploy_folder}}'
     name: '{{inventory_hostname}}'
     state: poweredon
@@ -40,8 +41,7 @@
       memory_mb: '{{ vm_mem }}'
       num_cpus: '{{ vm_cpu }}'
     disk:
-    - autoselect_datastore: true
-      type: thin
+    - type: thin
       size_gb: '{{vm_disk_size}}'
     networks:
     - name: '{{vm_network}}'
