@@ -1,9 +1,20 @@
-- hosts: servers
+- hosts: fxhtyul2pnet001.fxhosting.net
+  become: true
   tasks:
-    - include: ../roles/onboarding_setup.yml
-    - include: ../roles/add_apt_repo.yml
-    - name: Install MDATP
+    - name: Display all variables/facts known for a host
+      ansible.builtin.debug:
+        msg: System {{ inventory_hostname }} is {{ ansible_os_family }} - {{ansible_facts['distribution']}} {{ansible_facts['distribution_major_version']}}
+    - include: onboarding_setup.yml
+    - include: add_repo.yml
+    - name: Install MDATP (RedHat family OS)
+      dnf:
+        name: mdatp
+        state: latest
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+    - name: Install MDATP (Debian family OS)
       apt:
         name: mdatp
         state: latest
         update_cache: yes
+      when: ansible_os_family == "Debian"

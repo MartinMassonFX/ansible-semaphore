@@ -48,12 +48,12 @@
     enabled: Yes
   when: ansible_facts['distribution'] == "Fedora" 
 
-- name: Add Ubuntu 22.04   Microsoft yum repository for MDATP
+- name: Add Ubuntu Microsoft yum repository for MDATP
   yum_repository:
     name: packages-microsoft-prod
     description: Microsoft Defender for Endpoint
     file: microsoft-prod
-    baseurl: https://packages.microsoft.com/ubuntu/22.04/prod/
+    baseurl: "https://packages.microsoft.com/ubuntu/{{ansible_facts['distribution_major_version']}}/prod/"
     gpgcheck: yes
     enabled: Yes
   when: ansible_os_family == "Ubuntu"
