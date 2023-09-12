@@ -3,7 +3,7 @@ keyboard 'us'
 lang en_US.UTF-8
 timezone America/Toronto --utc
 
-rootpw "{{vm_rootpwd}}"
+rootpw "{{vault_ovh_vm_rootpasswd}}"
 
 network --bootproto=static --ip={{vm_ip}} --netmask={{vm_netmask}} --gateway={{vm_gw}} --nameserver={{vm_nameserver}} --noipv6
 network --hostname={{ inventory_hostname }}
